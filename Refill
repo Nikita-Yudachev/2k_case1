@@ -14,7 +14,7 @@ qwer = 0
 
 def azs_file():
     """Функция возвращает все необходимую информацию про заправку. """
-    with open('azs (1).txt') as azs:
+    with open('azs.txt') as azs:
         inf_azs = []
         for z in azs:
             inf_azs.append(z.split())
@@ -106,7 +106,7 @@ def checking():
 queue_azs = azs_file()[0]
 inf_azs = azs_file()[1]
 line_azs = azs_file()[3]
-with open('input (1).txt') as fin:
+with open('input.txt') as fin:
     text = fin.readlines()
     list_time = []
     q_car = {}  # информация о машине

@@ -1,14 +1,15 @@
-
-
-
-
-
+"""
+Developers:
+Yudachev N. - 80%
+Kuleshov R. - 60%
+"""
 import random
 import math
 
 price_petrol = {'АИ-80': 40.3, 'АИ-92': 44.2, 'АИ-95': 47.35, 'АИ-98': 48.75}
 full_price = 0
 petrol = {'АИ-80': 0, 'АИ-92': 0, 'АИ-95': 0, 'АИ-98': 0}
+qwer = 0
 
 
 def azs_file():
@@ -42,6 +43,7 @@ def azs_file():
 
 
 def times():
+    """Функция считает время заверешения заправки."""
     #  Время завершения заправки
     if line_azs[n_azs][-1] <= icar[0]:
         if int(icar[0].split(':')[1]) + time > 59:
@@ -86,6 +88,7 @@ def times():
 
 
 def checking():
+    """Функция удаляет клиента, который уже заправился."""
     print('В', list_time[0], ' клиент:',
           q_car[list_time[0]][0][0] + ' ' + q_car[list_time[0]][0][2] + ' ' + q_car[list_time[0]][0][1] + ' ' +
           q_car[list_time[0]][1], 'заправил свой автомобиль и покинул АЗС.')
@@ -105,8 +108,6 @@ inf_azs = azs_file()[1]
 line_azs = azs_file()[3]
 with open('input (1).txt') as fin:
     text = fin.readlines()
-    # print(queue_azs)
-    # print(inf_azs)
     list_time = []
     q_car = {}  # информация о машине
     for car in text:
@@ -137,6 +138,7 @@ with open('input (1).txt') as fin:
                     if queue_azs[j][0] < queue_azs[j][1]:  # проверка свободна ли заправка
                         q[j] = queue_azs[j][0]
                 if len(q) == 0:
+                    qwer += 1
                     print('В', icar[0], 'новый клиент:',
                           icar[0] + ' ' + icar[2] + ' ' + icar[1] + ' ' + str(time),
                           'не смог заправить автомобиль и покинул АЗС.')
@@ -151,7 +153,6 @@ with open('input (1).txt') as fin:
             elif q_car.get(list_time[-1]) != None:
                 q_car[list_time[-1]].append([icar, str(time), n_azs])
             list_time.sort()
-            print(list_time)
             # вывод инфы по азс по времени приезда и уезда машин.
             if len(list_time) > 1:
                 for ram in range(len(list_time) - 1):
@@ -189,3 +190,4 @@ print('Количество бензина которое купили за се
 for l in petrol:
     print(l, '-', petrol[l], 'литров')
 print('Количестов денег заработанное за день =', round(full_price, 2), 'рублей.')
+print('Количество клиентов, которые покинули АЗС не заправив автомобиль из-за «скопившейся» очереди равно', qwer)

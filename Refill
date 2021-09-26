@@ -1,0 +1,191 @@
+
+
+
+
+
+import random
+import math
+
+price_petrol = {'АИ-80': 40.3, 'АИ-92': 44.2, 'АИ-95': 47.35, 'АИ-98': 48.75}
+full_price = 0
+petrol = {'АИ-80': 0, 'АИ-92': 0, 'АИ-95': 0, 'АИ-98': 0}
+
+
+def azs_file():
+    """Функция возвращает все необходимую информацию про заправку. """
+    with open('azs (1).txt') as azs:
+        inf_azs = []
+        for z in azs:
+            inf_azs.append(z.split())
+        w = {}
+        lineazs = {}  # Сюда будут добавляться время завершения заправки машин.
+        for o in range(len(inf_azs)):
+            w[o + 1] = [0, int(inf_azs[o][1])]
+            lineazs[o + 1] = ['00:00']
+        c = {'АИ-80': [], 'АИ-92': [], 'АИ-95': [], 'АИ-98': []}
+        for l in inf_azs:
+            if len(l) == 3:
+                c[l[2]] += l[0]
+            if len(l) == 4:
+                c[l[2]] += l[0]
+                c[l[3]] += l[0]
+            if len(l) == 5:
+                c[l[2]] += l[0]
+                c[l[3]] += l[0]
+                c[l[4]] += l[0]
+            if len(l) == 6:
+                c[l[2]] += l[0]
+                c[l[3]] += l[0]
+                c[l[4]] += l[0]
+                c[l[5]] += l[0]
+        return [w, c, inf_azs, lineazs]
+
+
+def times():
+    #  Время завершения заправки
+    if line_azs[n_azs][-1] <= icar[0]:
+        if int(icar[0].split(':')[1]) + time > 59:
+            time1 = int(icar[0].split(':')[1]) + time - 60  # количество минут в часе
+            if time1 > 9:
+                if int(icar[0].split(':')[0]) + 1 >= 10:
+                    list_time.append(str(int(icar[0].split(':')[0]) + 1) + ':' + str(time1))
+                else:
+                    list_time.append('0' + str(int(icar[0].split(':')[0]) + 1) + ':' + str(time1))
+            if time1 < 10:
+                if int(icar[0].split(':')[0]) + 1 >= 10:
+                    list_time.append(str(int(icar[0].split(':')[0]) + 1) + ':0' + str(time1))
+                else:
+                    list_time.append('0' + str(int(icar[0].split(':')[0]) + 1) + ':0' + str(time1))
+        if int(icar[0].split(':')[1]) + time <= 59:
+            time1 = int(icar[0].split(':')[1]) + time
+            if time1 > 9:
+                list_time.append(icar[0].split(':')[0] + ':' + str(time1))
+            if time1 < 10:
+                list_time.append(icar[0].split(':')[0] + ':0' + str(time1))
+        line_azs[n_azs].append(list_time[-1])
+    elif line_azs[n_azs][-1] >= icar[0]:
+        if int(line_azs[n_azs][-1].split(':')[1]) + time > 59:
+            time1 = int(line_azs[n_azs][-1].split(':')[1]) + time - 60
+            if time1 > 9:
+                if int(line_azs[n_azs][-1].split(':')[0]) + 1 >= 10:
+                    list_time.append(str(int(line_azs[n_azs][-1].split(':')[0]) + 1) + ':' + str(time1))
+                else:
+                    list_time.append('0' + str(int(line_azs[n_azs][-1].split(':')[0]) + 1) + ':' + str(time1))
+            if time1 < 10:
+                if int(line_azs[n_azs][-1].split(':')[0]) + 1 >= 10:
+                    list_time.append(str(int(line_azs[n_azs][-1].split(':')[0]) + 1) + ':0' + str(time1))
+                else:
+                    list_time.append('0' + str(int(line_azs[n_azs][-1].split(':')[0]) + 1) + ':0' + str(time1))
+        if int(line_azs[n_azs][-1].split(':')[1]) + time <= 59:
+            time1 = int(line_azs[n_azs][-1].split(':')[1]) + time
+            if time1 > 9:
+                list_time.append(line_azs[n_azs][-1].split(':')[0] + ':' + str(time1))
+            if time1 < 10:
+                list_time.append(line_azs[n_azs][-1].split(':')[0] + ':0' + str(time1))
+        line_azs[n_azs].append(list_time[-1])
+
+
+def checking():
+    print('В', list_time[0], ' клиент:',
+          q_car[list_time[0]][0][0] + ' ' + q_car[list_time[0]][0][2] + ' ' + q_car[list_time[0]][0][1] + ' ' +
+          q_car[list_time[0]][1], 'заправил свой автомобиль и покинул АЗС.')
+    queue_azs.get(q_car[list_time[0]][2])[0] -= 1
+    for i in range(1, len(queue_azs) + 1):
+        print('Автомат №' + str(i) + ' максимальная очередь: ' + str(
+            queue_azs[i][1]) + ' Марки бензина: ' +
+              ' '.join(azs_file()[2][i - 1][2:]) + '->' + '*' * queue_azs[i][0])
+    print()
+    if len(q_car[list_time[0]]) == 4:
+        q_car[list_time[0]] = q_car[list_time[0]][3]
+    list_time.pop(0)
+
+
+queue_azs = azs_file()[0]
+inf_azs = azs_file()[1]
+line_azs = azs_file()[3]
+with open('input (1).txt') as fin:
+    text = fin.readlines()
+    # print(queue_azs)
+    # print(inf_azs)
+    list_time = []
+    q_car = {}  # информация о машине
+    for car in text:
+        s = []  # доступные заправки для одного автомобиля на которых есть его бензин
+        icar = car.split()
+        time = 0  # продолжительность заправки
+        if math.ceil(int(icar[1]) / 10) == 1:
+            time = math.ceil(int(icar[1]) / 10) + random.randint(0, 1)
+        else:
+            time = math.ceil(int(icar[1]) / 10) + random.randint(-1, 1)
+
+        for i in inf_azs.get(icar[2]):
+            s.append(int(i))
+        q = {}  # словарь, где лежат доступные заправки
+        for j in s:  # находит лучшую заправку из всех
+            if queue_azs[j][0] < queue_azs[j][1]:  # проверка свободна ли заправка
+                q[j] = queue_azs[j][0]
+
+        if len(q) == 0:
+            if len(list_time) > 1:
+                for ram in range(len(list_time) - 1):
+                    if list_time[0] <= icar[0]:
+                        checking()
+                for i in inf_azs.get(icar[2]):
+                    s.append(int(i))
+                q = {}  # словарь, где лежат доступные заправки
+                for j in s:  # находит лучшую заправку из всех
+                    if queue_azs[j][0] < queue_azs[j][1]:  # проверка свободна ли заправка
+                        q[j] = queue_azs[j][0]
+                if len(q) == 0:
+                    print('В', icar[0], 'новый клиент:',
+                          icar[0] + ' ' + icar[2] + ' ' + icar[1] + ' ' + str(time),
+                          'не смог заправить автомобиль и покинул АЗС.')
+        if len(q) != 0:
+            petrol[icar[2]] += int(icar[1])
+            full_price += price_petrol[icar[2]]
+            sorted_tuples = sorted(q.items(), key=lambda item: item[1])
+            n_azs = list(sorted_tuples[0])[0]
+            times()
+            if q_car.get(list_time[-1]) == None:
+                q_car[list_time[-1]] = [icar, str(time), n_azs]
+            elif q_car.get(list_time[-1]) != None:
+                q_car[list_time[-1]].append([icar, str(time), n_azs])
+            list_time.sort()
+            print(list_time)
+            # вывод инфы по азс по времени приезда и уезда машин.
+            if len(list_time) > 1:
+                for ram in range(len(list_time) - 1):
+                    if int(list_time[0].split(':')[0]) == int(icar[0].split(':')[0]):
+                        if int(list_time[0].split(':')[1]) <= int(icar[0].split(':')[1]):
+                            checking()
+                    elif int(list_time[0].split(':')[0]) < int(icar[0].split(':')[0]):
+                        checking()
+            queue_azs[n_azs][0] += 1
+            print('В', icar[0], 'новый клиент:',
+                  icar[0] + ' ' + icar[2] + ' ' + icar[1] + ' ' + str(time),
+                  'встал в очередь к автомату №' + str(n_azs))
+            for i in range(1, len(queue_azs) + 1):
+                print('Автомат №' + str(i) + ' максимальная очередь: ' + str(queue_azs[i][1]) + ' Марки бензина: ' +
+                      ' '.join(azs_file()[2][i - 1][2:]) + '->' + '*' * queue_azs[i][0])
+            print()
+
+        if len(list_time) == 1 and car == text[-1]:
+            t = list_time[0].split(':')
+            if int(t[0]) == 24:
+                print('В', '00:'+t[1], ' клиент:',
+                      q_car[list_time[0]][0][0] + ' ' + q_car[list_time[0]][0][2] + ' ' + q_car[list_time[0]][0][1] + ' ' +
+                      q_car[list_time[0]][1], 'заправил свой автомобиль и покинул АЗС.')
+            else:
+                print('В', list_time[0], ' клиент:',
+                      q_car[list_time[0]][0][0] + ' ' + q_car[list_time[0]][0][2] + ' ' + q_car[list_time[0]][0][
+                          1] + ' ' +
+                      q_car[list_time[0]][1], 'заправил свой автомобиль и покинул АЗС.')
+            queue_azs.get(q_car[list_time[0]][2])[0] -= 1
+            for i in range(1, len(queue_azs) + 1):
+                print('Автомат №' + str(i) + ' максимальная очередь: ' + str(
+                    queue_azs[i][1]) + ' Марки бензина: ' +
+                      ' '.join(azs_file()[2][i - 1][2:]) + '->' + '*' * queue_azs[i][0])
+print('Количество бензина которое купили за сегодня.')
+for l in petrol:
+    print(l, '-', petrol[l], 'литров')
+print('Количестов денег заработанное за день =', round(full_price, 2), 'рублей.')
